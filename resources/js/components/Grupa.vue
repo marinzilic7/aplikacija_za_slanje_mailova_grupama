@@ -49,7 +49,7 @@
 
         <div class="container">
             <h4 class="mt-5 ms-4">Sve grupe</h4>
-            <table class="table border mt-5 shadow-lg">
+            <table class="table table-bordered border-secondary border mt-5 shadow-lg">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
@@ -57,6 +57,8 @@
                         <th scope="col">Ime</th>
                         <th scope="col">Opis</th>
                         <th scope="col">Kreirana</th>
+                        <th scope="col">Izbrisi</th>
+                        <th scope="col">Uredi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +68,8 @@
                         <th>{{ grupa.ime }}</th>
                         <th>{{ grupa.opis }}</th>
                         <th>{{ grupa.created_at }}</th>
+                        <th><button class="btn btn-sm btn-danger">Izbrisi</button></th>
+                        <th><button class="btn btn-sm btn-warning">Uredi</button></th>
                     </tr>
                 </tbody>
             </table>
@@ -115,6 +119,7 @@ export default {
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.successReg = true;
+                     this.getGroup();
                     this.data = {
                         ime: "",
                         opis: "",
