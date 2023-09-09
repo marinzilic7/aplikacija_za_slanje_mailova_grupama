@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import PocetnaView from '../views/PocetnaView.vue'
 import RegistracijaView from '../views/RegistracijaView.vue'
 import PrijavaView from '../views/PrijavaView.vue'
-import PredmetiView from '../views/PredmetiView.vue'
+import GrupaView from '../views/GrupaView.vue'
 import KorisniciView from '../views/KorisniciView.vue'
 
 
@@ -29,9 +29,9 @@ const router = createRouter({
             component: PrijavaView
         },
         {
-            path: '/predmeti',
-            name: 'predmeti',
-            component: PredmetiView
+            path: '/grupe',
+            name: 'grupe',
+            component: GrupaView
         },
         {
             path: '/korisnici',

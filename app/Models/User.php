@@ -14,7 +14,10 @@ class User extends Model implements Authenticatable
         'ime', 'prezime', 'email', 'password',
     ];
 
-
+    public function group()
+    {
+        return $this->hasMany(Group::class);
+    }
 
     use HasFactory;
 }

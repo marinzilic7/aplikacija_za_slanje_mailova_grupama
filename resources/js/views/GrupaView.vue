@@ -1,13 +1,13 @@
 
 <script setup>
 
-import Predmeti from '../components/Predmeti.vue'
+import Grupa from '../components/Grupa.vue'
 
 </script>
 
 
 <template>
-    <Predmeti/>
+    <Grupa/>
 </template>
 
 

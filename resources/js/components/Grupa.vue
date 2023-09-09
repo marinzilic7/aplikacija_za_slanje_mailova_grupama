@@ -1,10 +1,12 @@
 <template>
     <div class="registration">
-        <div class="container d-flex flex-column align-items-center justify-content-center">
+        <div
+            class="container d-flex flex-column align-items-center justify-content-center"
+        >
             <h4 class="mt-5">Dodaj predmet</h4>
             <form
-                class="col-lg-5 border shadow-lg p-5  mt-5"
-                @submit.prevent="dodajPredmet()"
+                class="col-lg-5 border shadow-lg p-5 mt-5"
+                @submit.prevent="dodajGrupu()"
                 method="POST"
             >
                 <input type="hidden" v-model="this.POST" />
@@ -27,24 +29,46 @@
                 </p>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label"
-                        >Studij</label
+                        >Opis grupe</label
                     >
                     <input
                         type="text"
                         class="form-control"
                         id="exampleInputPassword1"
-                        v-model="data.studij"
+                        v-model="data.opis"
                     />
                 </div>
-                <p v-if="errors.studij" class="text-danger">
-                    {{ errors.studij[0] }}
+                <p v-if="errors.opis" class="text-danger">
+                    {{ errors.opis[0] }}
                 </p>
                 <button type="submit" class="btn btn-primary w-100">
                     Dodaj predmet
                 </button>
-
-
             </form>
+        </div>
+
+        <div class="container">
+            <h4 class="mt-5 ms-4">Sve grupe</h4>
+            <table class="table border mt-5 shadow-lg">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Korisnik</th>
+                        <th scope="col">Ime</th>
+                        <th scope="col">Opis</th>
+                        <th scope="col">Kreirana</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="grupa in grupe">
+                        <th>{{ grupa.id }}</th>
+                        <th>{{ grupa.user.ime }}</th>
+                        <th>{{ grupa.ime }}</th>
+                        <th>{{ grupa.opis }}</th>
+                        <th>{{ grupa.created_at }}</th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -57,16 +81,17 @@ export default {
         return {
             data: {
                 ime: "",
-                studij: "",
+                opis: "",
             },
             csrfToken: "",
             POST: "",
             errors: {},
-
+            grupe: [],
         };
     },
     mounted() {
         this.fetchCsrfToken();
+        this.getGroup();
     },
     methods: {
         fetchCsrfToken() {
@@ -79,22 +104,20 @@ export default {
                     console.error(error);
                 });
         },
-        dodajPredmet(){
+        dodajGrupu() {
             const Data = {
                 ime: this.data.ime,
-                studij: this.data.studij,
-
+                opis: this.data.opis,
             };
             axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
             axios
-                .post("/dodajPredmet", Data)
+                .post("/dodajGrupu", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
                     this.successReg = true;
                     this.data = {
                         ime: "",
-                        studij: "",
-
+                        opis: "",
                     };
                     this.errors = {};
                 })
@@ -105,11 +128,29 @@ export default {
                         console.log(error);
                     }
                 });
-        }
+        },
+        getGroup() {
+            axios
+                .get("/getGroup")
+                .then((response) => {
+                    this.grupe = response.data.map((grupa) => ({
+                        ...grupa,
+                        created_at: new Date(
+                            grupa.created_at
+                        ).toLocaleDateString("hr-HR", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        }),
+                    }));
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -31,8 +31,8 @@ import { RouterLink, RouterView } from "vue-router";
                     <li class="nav-item">
                         <RouterLink
                             class="nav-link text-light text-decoration-none"
-                            to="/predmeti"
-                            >Predmeti</RouterLink
+                            to="/grupe"
+                            >Grupe</RouterLink
                         >
                     </li>
                     <li class="nav-item">
