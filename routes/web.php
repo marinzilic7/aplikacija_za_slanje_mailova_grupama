@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::get('/getGroup/{id}',[GroupController::class,'getGrupu']);
 Route::post('/dodajClana',[MemberController::class,'dodajClana']);
 Route::get('/getMember',[MemberController::class,'getMember']);
 Route::get('/getMember/{id}',[MemberController::class,'getClan']);
+
+Route::post('/addPost',[PostController::class,'addPost']);
 
 
 
