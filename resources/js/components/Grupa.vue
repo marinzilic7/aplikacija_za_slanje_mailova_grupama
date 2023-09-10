@@ -1,5 +1,4 @@
 <template>
-
     <div class="registration">
         <div
             class="container d-flex flex-column align-items-center justify-content-center"
@@ -75,7 +74,10 @@
                                 ></button>
                             </div>
                             <div class="modal-body">
-                                <form @submit.prevent="dodajClana()" method="POST">
+                                <form
+                                    @submit.prevent="dodajClana()"
+                                    method="POST"
+                                >
                                     <input type="hidden" v-model="this.POST" />
                                     <input
                                         type="hidden"
@@ -144,9 +146,18 @@
                                 >
                                     Close
                                 </button>
-                                <div v-if="postoji" class=" alert alert-danger w-100 text-center fw-bold" ><p>Korisnik je vec clan grupe!</p></div>
-                                <div v-if="nePostoji" class=" alert alert-success w-100 text-center fw-bold" ><p>Clan dodan u grupu!</p></div>
-
+                                <div
+                                    v-if="postoji"
+                                    class="alert alert-danger w-100 text-center fw-bold"
+                                >
+                                    <p>Korisnik je vec clan grupe!</p>
+                                </div>
+                                <div
+                                    v-if="nePostoji"
+                                    class="alert alert-success w-100 text-center fw-bold"
+                                >
+                                    <p>Clan dodan u grupu!</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,6 +176,7 @@
                         <th scope="col">Korisnik</th>
                         <th scope="col">Ime</th>
                         <th scope="col">Opis</th>
+                        <th scope="col">Članovi grupe</th>
                         <th scope="col">Kreirana</th>
                         <th scope="col">Izbrisi</th>
                         <th scope="col">Uredi</th>
@@ -177,6 +189,24 @@
                         <th>{{ grupa.user.ime }}</th>
                         <th>{{ grupa.ime }}</th>
                         <th>{{ grupa.opis }}</th>
+
+                        <th>
+                            <span
+                                v-for="member in members"
+                                :key="member.id"
+                            >
+                                <p v-if="member.group.id == grupa.id">{{ member.user.ime }}</p>
+
+                                <span
+                                    v-if="
+                                        grupa.member.indexOf(member) !==
+                                        grupa.member.length - 1
+                                    "
+                                    >
+                                </span>
+                            </span>
+                        </th>
+
                         <th>{{ grupa.created_at }}</th>
                         <th>
                             <button
@@ -316,15 +346,17 @@ export default {
                 group_id: "",
             },
             users: [],
-            postoji:false,
-            poruka:'',
-            nePostoji:false,
+            postoji: false,
+            poruka: "",
+            nePostoji: false,
+            members:[],
         };
     },
     mounted() {
         this.fetchCsrfToken();
         this.getGroup();
         this.getUser();
+        this.getMember();
     },
     methods: {
         fetchCsrfToken() {
@@ -460,15 +492,15 @@ export default {
             axios
                 .post("/dodajClana", Podaci)
                 .then((response) => {
-                    this.poruka = response.data.poruka
-                    if(this.poruka == 'Korisnik je clan grupe'){
-                        this.postoji = true
-                    }else if(this.poruka == 'Uspjesno'){
-                        this.postoji = false
-                        this.nePostoji = true
+                    this.poruka = response.data.poruka;
+                    if (this.poruka == "Korisnik je clan grupe") {
+                        this.postoji = true;
+                    } else if (this.poruka == "Uspjesno") {
+                        this.postoji = false;
+                        this.nePostoji = true;
                         setTimeout(() => {
                             $("#memberModal").modal("hide");
-                            this.nePostoji = false
+                            this.nePostoji = false;
                         }, 2000);
                     }
 
@@ -484,6 +516,26 @@ export default {
                     } else {
                         console.log(error);
                     }
+                });
+        },
+        getMember() {
+            axios
+                .get("/getMember")
+                .then((response) => {
+                    this.members = response.data.map((grupa) => ({
+                        ...grupa,
+                        created_at: new Date(
+                            grupa.created_at
+                        ).toLocaleDateString("hr-HR", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                        }),
+                    }));
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
     },

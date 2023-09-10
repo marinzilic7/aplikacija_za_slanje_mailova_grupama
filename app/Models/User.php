@@ -21,7 +21,7 @@ class User extends Model implements Authenticatable
 
     public function member()
     {
-        return $this->hasMany(Group::class);
+        return $this->hasMany(Member::class);
     }
 
     use HasFactory;

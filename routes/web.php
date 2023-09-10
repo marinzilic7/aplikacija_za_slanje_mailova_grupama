@@ -18,6 +18,7 @@ Route::post('/urediGrupu/{id}',[GroupController::class,'urediGrupu']);
 
 
 Route::post('/dodajClana',[MemberController::class,'dodajClana']);
+Route::get('/getMember',[MemberController::class,'getMember']);
 
 
 Route::get('/{any}', function () {

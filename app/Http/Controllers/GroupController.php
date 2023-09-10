@@ -36,7 +36,7 @@ class GroupController extends Controller
 
     public function getGroup(){
 
-        $group = Group::with('user')->get();
+        $group = Group::with('user','member')->get();
         return response()->json($group);
     }
 

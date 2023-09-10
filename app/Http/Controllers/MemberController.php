@@ -25,7 +25,7 @@ class MemberController extends Controller
             ]
         );
 
-        $existMember = Member::where('user_id', $data['user_id'])->first();
+        $existMember = Member::where('user_id', $data['user_id']);
         if($existMember){
             return response()->json(['poruka' => 'Korisnik je clan grupe']);
         }
@@ -33,5 +33,11 @@ class MemberController extends Controller
         $clan = new Member();
         $clan->create($data);
         return response()->json(['poruka' => 'Uspjesno']);
+    }
+
+    public function getMember(){
+
+        $group = Member::with('user','group')->get();
+        return response()->json($group);
     }
 }
