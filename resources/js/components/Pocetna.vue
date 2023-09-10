@@ -137,10 +137,34 @@
                 </div>
             </div>
         </div>
+        <div class="mt-5">
+            <h4>Objave</h4>
+        </div>
+        <div
+            v-for="objava in objave"
+            :key="objava.id"
+            class="border p-4 shadow-lg mt-4"
+        >
+            <p class="fw-bold">Tema - {{ objava.tema }}</p>
+            <div class="d-flex justify-content-between">
+                <p>
+                    <span class="fw-bold">Napisao/la</span> -
+                    {{ objava.user.ime }}
+                </p>
+                <p>{{ formattedDate(objava.created_at) }}</p>
+            </div>
+            <p>
+                <span class="fw-bold">Sadrzaj:</span> <br />
+                {{ objava.sadrzaj }}
+            </p>
+        </div>
     </div>
 </template>
 
 <script>
+import { format } from "date-fns";
+import { hr } from "date-fns/locale";
+
 export default {
     data() {
         return {
@@ -156,11 +180,13 @@ export default {
             csrfToken: "",
             POST: "",
             errors: {},
+            objave: [],
         };
     },
     created() {
         this.getGroup();
         this.fetchCsrfToken();
+        this.getPost();
     },
     methods: {
         fetchCsrfToken() {
@@ -172,6 +198,13 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+
+        formattedDate(created_at) {
+            // Funkcija za formatiranje datuma
+            return format(new Date(created_at), "d. MMMM yyyy. HH:mm", {
+                locale: hr,
+            });
         },
         getGroup() {
             axios
@@ -219,6 +252,7 @@ export default {
                 .get(`/getGroup/${this.group_id}`)
                 .then((response) => {
                     this.getMember();
+                    this.getPost();
                     this.soloGroup = response.data;
                     this.prikazi = true;
                     console.log(response.data);
@@ -251,7 +285,7 @@ export default {
                 .post("/addPost", Data)
                 .then((response) => {
                     this.poruka = response.data.poruka;
-
+                    this.getPost();
                     this.post = {
                         group_id: "",
                         tema: "",
@@ -265,6 +299,18 @@ export default {
                     } else {
                         console.log(error);
                     }
+                });
+        },
+        getPost() {
+            axios
+                .get(`/getPost/${this.group_id}`)
+                .then((response) => {
+                    this.objave = response.data;
+
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
     },

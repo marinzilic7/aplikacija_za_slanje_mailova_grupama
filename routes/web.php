@@ -23,7 +23,7 @@ Route::get('/getMember',[MemberController::class,'getMember']);
 Route::get('/getMember/{id}',[MemberController::class,'getClan']);
 
 Route::post('/addPost',[PostController::class,'addPost']);
-
+Route::get('/getPost/{id}',[PostController::class,'getPost']);
 
 
 Route::get('/{any}', function () {

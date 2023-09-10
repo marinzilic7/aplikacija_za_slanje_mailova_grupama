@@ -20,5 +20,10 @@ class Group extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function post()
+    {
+        return $this->hasMany(Post::class);
+    }
     use HasFactory;
 }
