@@ -20,7 +20,7 @@ import { RouterLink, RouterView } from "vue-router";
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav " v-if="isLoggedIn">
                     <li class="nav-item">
                         <RouterLink
                             class="nav-link text-light text-decoration-none"
@@ -130,7 +130,7 @@ export default {
                     this.isLoggedIn = false;
                     this.loggedInUser = null;
                     this.$store.dispatch("logout");
-                    this.$router.push("/login");
+                    this.$router.push("/prijava");
                 })
                 .catch((error) => {
                     console.log(error);

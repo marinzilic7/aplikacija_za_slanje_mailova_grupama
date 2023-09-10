@@ -24,7 +24,7 @@ Route::get('/getMember/{id}',[MemberController::class,'getClan']);
 
 Route::post('/addPost',[PostController::class,'addPost']);
 Route::get('/getPost/{id}',[PostController::class,'getPost']);
-
+Route::post('/izbrisiPost/{id}',[PostController::class,'izbrisiPost']);
 
 Route::get('/{any}', function () {
     return view('welcome');

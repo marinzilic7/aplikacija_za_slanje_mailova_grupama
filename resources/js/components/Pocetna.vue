@@ -1,8 +1,9 @@
 <template>
-    <div class="container d-flex justify-content-center">
+    <div class="container d-flex justify-content-center" >
         <div class="mt-5 col-lg-4">
             <h4>Odaberi grupu</h4>
             <select
+                :disabled="!isLoggedIn"
                 class="form-select shadow-lg"
                 aria-label="Default select example"
                 v-model="group_id"
@@ -16,6 +17,7 @@
                     {{ grupa.ime }}
                 </option>
             </select>
+            <p v-if="!isLoggedIn" class="text-danger">Nije moguce birati grupu niti izvrsavati ostale radnje ako niste prijavljeni.</p>
         </div>
     </div>
     <br />
@@ -157,6 +159,10 @@
                 <span class="fw-bold">Sadrzaj:</span> <br />
                 {{ objava.sadrzaj }}
             </p>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-sm btn-danger" @click="izbrisiPost(objava.id)">Izbrisi</button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -164,7 +170,7 @@
 <script>
 import { format } from "date-fns";
 import { hr } from "date-fns/locale";
-
+import { mapGetters } from "vuex";
 export default {
     data() {
         return {
@@ -182,6 +188,12 @@ export default {
             errors: {},
             objave: [],
         };
+    },
+    computed: {
+        ...mapGetters(["loggedInUser"]),
+        isLoggedIn() {
+            return this.loggedInUser !== null;
+        },
     },
     created() {
         this.getGroup();
@@ -227,26 +239,6 @@ export default {
                 });
         },
 
-        getGroup() {
-            axios
-                .get("/getGroup")
-                .then((response) => {
-                    this.grupe = response.data.map((grupa) => ({
-                        ...grupa,
-                        created_at: new Date(
-                            grupa.created_at
-                        ).toLocaleDateString("hr-HR", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                        }),
-                    }));
-                    console.log(response.data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
         selectGroup() {
             axios
                 .get(`/getGroup/${this.group_id}`)
@@ -284,8 +276,10 @@ export default {
             axios
                 .post("/addPost", Data)
                 .then((response) => {
+                    $("#exampleModal").modal("hide");
                     this.poruka = response.data.poruka;
                     this.getPost();
+
                     this.post = {
                         group_id: "",
                         tema: "",
@@ -311,6 +305,23 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                });
+        },
+
+        izbrisiPost(id) {
+            axios.defaults.headers.common["X-CSRF-TOKEN"] = this.csrfToken;
+            axios
+                .post(`/izbrisiPost/${id}`)
+                .then((response) => {
+                    this.poruka = response.data.poruka;
+                    this.getPost();
+                })
+                .catch((error) => {
+                    if (error.response && error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
                 });
         },
     },

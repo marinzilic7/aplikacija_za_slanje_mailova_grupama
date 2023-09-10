@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ObavijestONovomPostu;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -24,8 +25,10 @@ class PostController extends Controller
         $post->sadrzaj = $data['sadrzaj'];
         $post->user_id = auth()->id();
         $post->save();
+        $recipients = User::pluck('email')->toArray();
 
-        $recipients = ['marinzilic507@gmail.com'];
+
+
         foreach ($recipients as $recipient) {
             Mail::mailer('smtp')->to($recipient)->send(new ObavijestONovomPostu($post));
         }
@@ -38,5 +41,12 @@ class PostController extends Controller
         $post = Post::with('user','group')->where('group_id',$id)->get();
 
         return response()->json($post);
+    }
+
+    public function izbrisiPost($id){
+
+        $grupa = Post::findorFail($id);
+        $grupa->delete();
+        return response()->json(['poruka' => 'Uspjesno']);
     }
 }
