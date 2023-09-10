@@ -64,4 +64,10 @@ class GroupController extends Controller
             'grupa' => $grupa,
         ]);
     }
+
+    public function getGrupu($id)
+    {
+        $grupa = Group::with('user', 'member')->find($id);
+        return response()->json($grupa);
+    }
 }

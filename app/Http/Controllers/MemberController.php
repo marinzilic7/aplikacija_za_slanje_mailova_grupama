@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\Member;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class MemberController extends Controller
             ]
         );
 
-        $existMember = Member::where('user_id', $data['user_id']);
+        $existMember = Member::where('user_id', $data['user_id'])->where('group_id',$data['group_id'])->exists();
         if($existMember){
             return response()->json(['poruka' => 'Korisnik je clan grupe']);
         }
@@ -39,5 +40,11 @@ class MemberController extends Controller
 
         $group = Member::with('user','group')->get();
         return response()->json($group);
+    }
+
+    public function getClan($id)
+    {
+        $member = Member::with('user')->where('group_id',$id)->get();
+        return response()->json($member);
     }
 }

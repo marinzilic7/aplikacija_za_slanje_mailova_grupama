@@ -180,7 +180,7 @@
                         <th scope="col">Kreirana</th>
                         <th scope="col">Izbrisi</th>
                         <th scope="col">Uredi</th>
-                        <th scope="col">Dodaj</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -314,11 +314,7 @@
                                 </div>
                             </div>
                         </th>
-                        <th>
-                            <button class="btn btn-sm btn-primary">
-                                Dodaj
-                            </button>
-                        </th>
+
                     </tr>
                 </tbody>
             </table>
@@ -498,6 +494,7 @@ export default {
                     } else if (this.poruka == "Uspjesno") {
                         this.postoji = false;
                         this.nePostoji = true;
+                        this.getMember();
                         setTimeout(() => {
                             $("#memberModal").modal("hide");
                             this.nePostoji = false;

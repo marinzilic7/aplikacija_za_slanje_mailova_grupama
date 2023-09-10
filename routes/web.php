@@ -15,10 +15,12 @@ Route::post('/dodajGrupu',[GroupController::class,'dodajGrupu']);
 Route::get('/getGroup',[GroupController::class,'getGroup']);
 Route::post('/izbrisiGrupu/{id}',[GroupController::class,'izbrisiGrupu']);
 Route::post('/urediGrupu/{id}',[GroupController::class,'urediGrupu']);
-
+Route::get('/getGroup/{id}',[GroupController::class,'getGrupu']);
 
 Route::post('/dodajClana',[MemberController::class,'dodajClana']);
 Route::get('/getMember',[MemberController::class,'getMember']);
+Route::get('/getMember/{id}',[MemberController::class,'getClan']);
+
 
 
 Route::get('/{any}', function () {
